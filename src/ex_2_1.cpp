@@ -1,10 +1,7 @@
-#include "highgui.h"
+#include <opencv2/highgui.hpp>
+
+using namespace cv;
 
 int main( int argc, char** argv ) {
-    IplImage* img = cvLoadImage( argv[1] );
-    cvNamedWindow( "Example2-1", CV_WINDOW_AUTOSIZE );
-    cvShowImage( "Example2-1", img );
-    cvWaitKey(0);
-    cvReleaseImage( &img );
-    cvDestroyWindow( "Example2-1" );
+    Mat image = imread( argv[1] );
 }
