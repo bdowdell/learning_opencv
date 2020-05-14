@@ -1,30 +1,24 @@
-CC = gcc
-LD = gcc
-#PROG_NAME = prog
-
+CXX := gcc
+CXXFLAGS := -Wall -g
 SRC_DIR = ./src
-BUILD_DIR = ./build
-BIN_DIR  = ./bin
-SRC_LIST = $(wildcard $(SRC_DIR)/*.cpp)
-OBJ_LIST = $(BUILD_DIR)/$(notdir $(SRC_LIST:.cpp=.o))
-BIN = $(patsubst %.cpp,%,$(SRC_LIST))
-
-.PHONY: all clean $(PROG_NAME) compile
+OBJ_DIR = ./obj
+BIN_DIR = ./bin
+SRCS = $(wildcard $(SRC_DIR)/*.cpp)
+OBJS = $(OBJ_DIR)/$(notdir $(SRCS:.cpp=.o))
+BINS = $(BIN_DIR)/$(notdir $(SRCS:.cpp=))
 
 OPENCV = `pkg-config opencv4 --cflags --libs`
 LIBS = $(OPENCV)
 
-#all: $(PROG_NAME)
-all: $(BIN)
-compile:
-	$(CC) $(SRC_LIST) $(LIBS) -o $(OBJ_LIST) -lstdc++
+all : clean $(BINS) $(OBJS)
 
-$(BIN): compile
-	$(LD) $(OBJ_LIST) -o $(BIN_DIR)/$@
+$(BINS) : $(OBJS)
+	$(CXX) $(CXXFLAGS) $(LIBS) $< -o $@ -lstdc++
+	chmod +x $(BINS) 
 
-clean:
-	rm -f $(BIN_DIR)/$(BIN) $(BUILD_DIR)/*.o
+$(OBJS) : $(SRCS)
+	$(CXX) $(CXXFLAGS) $(LIBS) -c $< -o $@ -lstdc++
 
-
-#$(PROG):$(SRCS)
-#	$(CC) $(SRCS) $(LIBS) -o $(PROG) -lstdc++
+.PHONY: clean
+clean :
+	rm -f bin/* obj/*
