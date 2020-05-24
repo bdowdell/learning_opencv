@@ -4,8 +4,8 @@ SRC_DIR = ./src
 OBJ_DIR = ./obj
 BIN_DIR = ./bin
 SRCS = $(wildcard $(SRC_DIR)/*.cpp)
-OBJS = $(OBJ_DIR)/$(notdir $(SRCS:.cpp=.o))
-BINS = $(BIN_DIR)/$(notdir $(SRCS:.cpp=))
+OBJS = $(OBJ_DIR)/$(notdir $(SRCS:%.cpp=%.o))
+BINS = $(BIN_DIR)/$(notdir $(SRCS:%.cpp=%))
 
 OPENCV = `pkg-config opencv4 --cflags --libs`
 LIBS = $(OPENCV)
