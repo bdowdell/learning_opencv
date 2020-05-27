@@ -3,20 +3,20 @@ CXXFLAGS := -Wall -g
 SRC_DIR = ./src
 OBJ_DIR = ./obj
 BIN_DIR = ./bin
-SRCS = $(wildcard $(SRC_DIR)/*.cpp)
-OBJS = $(OBJ_DIR)/$(notdir $(SRCS:%.cpp=%.o))
-BINS = $(BIN_DIR)/$(notdir $(SRCS:%.cpp=%))
+SRCS := $(wildcard $(SRC_DIR)/*.cpp)
+OBJS := $(patsubst %.cpp,%.o, $(notdir $(SRCS)))
+BINS := $(patsubst %.o,%, $(OBJS))
 
 OPENCV = `pkg-config opencv4 --cflags --libs`
 LIBS = $(OPENCV)
 
-all : clean $(BINS) $(OBJS)
+all : clean $(addprefix $(BIN_DIR)/,$(BINS)) $(addprefix $(OBJ_DIR)/,$(OBJS))
 
-$(BINS) : $(OBJS)
+bin/% : obj/%.o
 	$(CXX) $(CXXFLAGS) $(LIBS) $< -o $@ -lstdc++
-	chmod +x $(BINS) 
+	chmod +x $@ 
 
-$(OBJS) : $(SRCS)
+obj/%.o : src/%.cpp
 	$(CXX) $(CXXFLAGS) $(LIBS) -c $< -o $@ -lstdc++
 
 .PHONY: clean
