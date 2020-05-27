@@ -16,6 +16,7 @@ int main( int argc, char** argv ){
     }
 
     namedWindow( "Example 2-3", WINDOW_AUTOSIZE );
+    moveWindow("Example 2-3",900,200);
     VideoCapture cap;
     cap.open( string(argv[1]) );
 
