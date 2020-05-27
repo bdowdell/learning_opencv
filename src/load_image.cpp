@@ -29,6 +29,7 @@ int main( int argc, char** argv ) {
 
     String windowName = "Viewer";
     namedWindow(windowName);
+    moveWindow(windowName,900,200);
     imshow(windowName, img);
     waitKey(0);
     destroyWindow(windowName);
