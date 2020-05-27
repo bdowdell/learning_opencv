@@ -10,14 +10,14 @@ BINS := $(patsubst %.o,%, $(OBJS))
 OPENCV = `pkg-config opencv4 --cflags --libs`
 LIBS = $(OPENCV)
 
-all : clean $(addprefix $(BIN_DIR)/,$(BINS)) $(addprefix $(OBJ_DIR)/,$(OBJS))
+all : $(addprefix $(BIN_DIR)/,$(BINS)) $(addprefix $(OBJ_DIR)/,$(OBJS))
 
 bin/% : obj/%.o
-	$(CXX) $(CXXFLAGS) $(LIBS) $< -o $@ -lstdc++
+	$(CXX) $(CXXFLAGS) $(LIBS) $? -o $@ -lstdc++
 	chmod +x $@ 
 
 obj/%.o : src/%.cpp
-	$(CXX) $(CXXFLAGS) $(LIBS) -c $< -o $@ -lstdc++
+	$(CXX) $(CXXFLAGS) $(LIBS) -c $? -o $@ -lstdc++
 
 .PHONY: clean
 clean :
