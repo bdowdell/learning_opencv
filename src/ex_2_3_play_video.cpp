@@ -24,7 +24,7 @@ int main( int argc, char** argv ){
         cap >> frame;
         if( frame.empty() ) break;
         imshow( "Example 2-3", frame );
-        if( (char) waitKey(33) >= 0 ) break;
+        if( (char) waitKey(100) >= 0 ) break;
     }
 
     return 0;
