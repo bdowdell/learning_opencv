@@ -59,7 +59,7 @@ int main( int argc, char** argv ) {
 
             setTrackbarPos("Position", window_name, current_pos);
             imshow( window_name, frame );
-            cout << "Current Frame Position: " << current_pos + 1 << " of " << frames << ".\n";
+            //cout << "Current Frame Position: " << current_pos + 1 << " of " << frames << ".\n";
 
             g_run -= 1;
         }
