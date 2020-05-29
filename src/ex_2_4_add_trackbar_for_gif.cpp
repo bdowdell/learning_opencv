@@ -34,27 +34,35 @@ int main( int argc, char** argv ) {
     namedWindow( window_name, WINDOW_AUTOSIZE );
     moveWindow(window_name, 900, 200);
 
+    //manually count frames as g_cap.get(CAP_PROP_FRAME_COUNT) returns negatives values
     g_cap.open( string(argv[1]) );
-    // get the frame count
-    int frames = (int) g_cap.get(CAP_PROP_FRAME_COUNT);
+    int frames = 0;
+    Mat frame;
+    for(;;){
+        g_cap >> frame;
+        if( frame.empty() ) break;
+        frames++;
+    }
     // get the frame width & height dimensions
     int tmpw = (int) g_cap.get(CAP_PROP_FRAME_WIDTH);
     int tmph = (int) g_cap.get(CAP_PROP_FRAME_HEIGHT);
     // output basic details of the video
     cout << "Video has " << frames << " frames of dimensions(" << tmpw << ", " << tmph << ").\n";
+
+    // reset g_cap to start by re-reading the capture in
+    g_cap.open( string(argv[1]) );
     
     // Create the trackback
     createTrackbar("Position", window_name, &g_slider_position, frames, onTrackbarSlide);
 
-    // Create the matrix to hold each frame
-    Mat frame;
+    // create a counter to keep track of the current position in the video, initialize at 0
+    int current_pos = 0;
 
     // Loop through the frames of the capture
     for(;;) {
 
         if( g_run != 0 ) {
             g_cap >> frame; if(frame.empty()) break;
-            int current_pos = (int) g_cap.get(CAP_PROP_POS_FRAMES);
             g_dontset = 1;
 
             setTrackbarPos("Position", window_name, current_pos);
@@ -62,6 +70,7 @@ int main( int argc, char** argv ) {
             cout << "Current Frame Position: " << current_pos + 1 << " of " << frames << ".\n";
 
             g_run -= 1;
+            current_pos+=1;
         }
 
         // get user input to adjust run mode or exit
