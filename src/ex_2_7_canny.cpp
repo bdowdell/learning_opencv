@@ -8,7 +8,7 @@ int main( int argc, char** argv ){
     // check for two command line arguments
     if( argc != 2) {
         cout << "Expected two command line arguments.\n";
-        cout << "Received " << argc << " arguments.\n";
+        cout << "Received " << argc << " argument(s).\n";
         cout << "Usage: " << argv[0] << " <filename>\n";
         cout << "Exiting ... \n";
         return -1;
