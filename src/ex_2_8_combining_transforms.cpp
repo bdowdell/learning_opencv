@@ -47,17 +47,17 @@ int main( int argc, char** argv ){
     cv::Canny( img_pyr2, img_cny, 10, 100, 3, true );
 
     // set the initial window position
-    int x = 500;
-    int y = 300;
-    cv::moveWindow( window_in, x, y );
+    int win_x = 500;
+    int win_y = 300;
+    cv::moveWindow( window_in, win_x, win_y );
     // Place the gray-scale converted window
-    cv::moveWindow( window_gry, x + img_width + 20, y );
+    cv::moveWindow( window_gry, win_x + img_width + 20, win_y );
     // place window for pyr2
-    cv::moveWindow( window_pyr2, (x + 2*(img_width + 20)), y );
+    cv::moveWindow( window_pyr2, (win_x + 2*(img_width + 20)), win_y );
     // Get new image width of scaled image
     int pyr2_width = img_pyr2.size().width;
     // place Canny window
-    cv::moveWindow( window_cny, (x + 2*(img_width + 20) + (pyr2_width + 20)), y );
+    cv::moveWindow( window_cny, (win_x + 2*(img_width + 20) + (pyr2_width + 20)), win_y );
 
     // show the windows
     cv::imshow( window_in, img_rgb );
