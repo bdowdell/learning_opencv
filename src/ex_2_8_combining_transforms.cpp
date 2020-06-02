@@ -36,7 +36,7 @@ int main( int argc, char** argv ){
     // Get the width of the input image
     int img_width = img_rgb.size().width;
 
-    // Convert img_grb to grayscale
+    // Convert img_rgb to grayscale
     cv::cvtColor( img_rgb, img_gry, cv::COLOR_BGR2GRAY );
 
     // run two passes of pyrDown() transform
