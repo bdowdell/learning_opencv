@@ -26,6 +26,13 @@ int main( int argc, char** argv ){
 
     // Read in the input image
     img_rgb = cv::imread( argv[1] );
+    int img_width = img_rgb.size().width;
+
+    // move the windows using the image dimensions
+    int window_x = 700;
+    int window_y = 300;
+    cv::moveWindow( window_gry, window_x, window_y );
+    cv::moveWindow( window_cny, (window_x + img_width) + 20, window_y );
 
     // Convert the RGB image to Gray Scale
     cv::cvtColor( img_rgb, img_gry, cv::COLOR_BGR2GRAY );
