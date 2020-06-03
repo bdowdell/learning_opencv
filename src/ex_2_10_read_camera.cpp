@@ -12,6 +12,8 @@ int main( int argc, char** argv ){
 
     cv::VideoCapture cap;
 
+    int video_flag = 0;
+
     // If only one argument is supplied, try opening the video camera
     // If a second command is supplied, open a video file instead
     if ( argc == 1 ) {
@@ -20,10 +22,20 @@ int main( int argc, char** argv ){
     } else {
         cap.open( argv[1] );
         cout << "Reading video file.  Press <esc> key to exit.\n";
+        video_flag = 1;
     }
     if ( !cap.isOpened() ) {
         cerr << "Couldn't open the capture.\n";
         return -1;
+    }
+
+    int frame_width = (int) cap.get(cv::CAP_PROP_FRAME_WIDTH);
+    int frame_height = (int) cap.get(cv::CAP_PROP_FRAME_HEIGHT);
+
+    cout << "Video Resolution is: (" << frame_width << ", " << frame_height << ")\n";
+    if ( video_flag == 1) {
+        int frames = (int) cap.get(cv::CAP_PROP_FRAME_COUNT);
+        cout << "Number of frames in video is: " << frames << "\n";
     }
 
     cv::Mat frame;
