@@ -73,7 +73,15 @@ int main( int argc, char** argv ){
     cout << "Pyramid2 pixel there is: " << (unsigned int)img_pyr2.at<uchar>(y, x) << "\n";
 
     // Change the pixel value in the Canny transformed image
-    img_cny.at<uchar>(x, y) = 128;
+    img_cny.at<uchar>(y, x) = 128;
+    // Change the pixel value in the original RGB image to denote it's location
+    x = 16;
+    y = 32;
+    img_rgb.at<uchar>(y, x) = 128;
+    // Display the referenced pixel in the gray scale image
+    img_gry.at<uchar>(y, x) = 128;
+    // Display the referenced pixel in the PyramidDown 2 image
+    img_pyr2.at<uchar>(y/=4, x/=4) = 128;
 
     // show the windows
     cv::imshow( window_in, img_rgb );
