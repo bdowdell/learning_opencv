@@ -59,7 +59,13 @@ int main( int argc, char** argv ){
         cv::imshow( window_in, bgr_frame );
 
         // apply log-polar transform
-        cv::logPolar( bgr_frame, logpolar_frame, cv::Point2f( bgr_frame.cols/2, bgr_frame.rows/2 ), 40, cv::WARP_FILL_OUTLIERS );
+        cv::logPolar(
+                    bgr_frame,
+                    logpolar_frame,
+                    cv::Point2f( bgr_frame.cols/2, bgr_frame.rows/2 ),
+                    40, 
+                    cv::WARP_FILL_OUTLIERS
+                    );
 
         cv::imshow( window_out, logpolar_frame );
         writer << logpolar_frame;
