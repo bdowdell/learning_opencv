@@ -37,7 +37,7 @@ cv::Mat RecursivePyrDown(cv::Mat inframe, int scale) {
 }
 
 // callback function for trackbar position change
-void onTrackbarSlide( int pos, void * ){
+void OnTrackbarSlide(int pos, void *){
     if ( pos != 0 ) {
         cout << "Applying " << 2*pos << "x pyramid downsampling.\n";
     } else {
@@ -82,7 +82,7 @@ int main( int argc, char** argv ){
 
     // Create trackbar for selecting pyramid downsample factor
     string trackbar_name = "Pyramid Downsampling Reduction Factor";
-    cv::createTrackbar( trackbar_name, rec_window, &g_slider_position, g_slider_max_pos, onTrackbarSlide );
+    cv::createTrackbar( trackbar_name, rec_window, &g_slider_position, g_slider_max_pos, OnTrackbarSlide );
 
     // Declare a Mat to hold the current frame from the camera stream
     cv::Mat bgr_frame;
