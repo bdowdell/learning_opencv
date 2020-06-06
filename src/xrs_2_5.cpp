@@ -36,6 +36,12 @@ cv::Mat pydDownsample( cv::Mat inframe, int scale ) {
     }
 }
 
+void onTrackbarSlide( int pos, void * ){
+    if ( pos != 0 ) {
+        cout << "Applying " << 2*pos << "x pyramid downsampling.\n";
+    }
+}
+
 int main( int argc, char** argv ){
 
     cv::VideoCapture cap;
@@ -60,7 +66,7 @@ int main( int argc, char** argv ){
     cv::Size size( (int) cap.get(cv::CAP_PROP_FRAME_WIDTH), (int) cap.get(cv::CAP_PROP_FRAME_HEIGHT) );
     cout << "Video dimensions are: " << size << "\n";
 
-    // Create a window for when we read from a camera asd well as for the processed frame
+    // Create a window for when we read from a camera as well as for the processed frame
     string rec_window = "Input Recording";
     string proc_window = "Processed Frame";
     int window_x = 500;
@@ -71,11 +77,14 @@ int main( int argc, char** argv ){
     cv::namedWindow( proc_window, cv::WINDOW_AUTOSIZE );
     cv::moveWindow( proc_window, (window_x + delta_x) + 10, window_y );
 
-    // Create trackbar
+    // Create trackbar for selecting pyramid downsample factor
     string trackbar_name = "Pyramid Downsampling Reduction Factor";
-    cv::createTrackbar( trackbar_name, rec_window, &g_slider_position, g_slider_max_pos );
+    cv::createTrackbar( trackbar_name, rec_window, &g_slider_position, g_slider_max_pos, onTrackbarSlide );
 
+    // Declare a Mat to hold the current frame from the camera stream
     cv::Mat bgr_frame;
+
+    cout << "Initially applying " << 2*g_slider_position << "x pyramid downsampling.\n";
 
     // Loop over the input
     for(;;) {
