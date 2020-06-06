@@ -30,9 +30,9 @@ cv::Mat recursivePyrDown(cv::Mat inframe, int scale) {
         cv::pyrDown( inframe, outframe );
         return outframe;
     } else {
-        cv::Mat proc;
-        cv::pyrDown( recursivePyrDown( inframe, --scale ), proc );
-        return proc;
+        cv::Mat processed_frame;
+        cv::pyrDown( recursivePyrDown( inframe, --scale ), processed_frame );
+        return processed_frame;
     }
 }
 
