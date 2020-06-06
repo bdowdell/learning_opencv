@@ -69,8 +69,8 @@ int main( int argc, char** argv ){
     // Create a window for when we read from a camera as well as for the processed frame
     string rec_window = "Input Recording";
     string proc_window = "Processed Frame";
-    int window_x = 500;
-    int window_y = 300;
+    int window_x = 600;
+    int window_y = 150;
     int delta_x = (int) size.width;
     cv::namedWindow( rec_window, cv::WINDOW_AUTOSIZE );
     cv::moveWindow( rec_window, window_x, window_y );
