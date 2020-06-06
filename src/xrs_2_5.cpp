@@ -38,30 +38,26 @@ cv::Mat pydDownsample( cv::Mat inframe, int scale ) {
 
 int main( int argc, char** argv ){
 
-    // initialize a variable to indicate whether input is from camera or file
-    int video_flag = 0;
-
-    cv::VideoCapture g_cap;
+    cv::VideoCapture cap;
 
     // Read in to cap
     if( argc == 1 ) {
         // reading from camera, only two args
-        g_cap.open(0, cv::CAP_V4L);
+        cap.open(0, cv::CAP_V4L);
         cout << "Reading from camera.  Reading until <esc> key is pressed ...\n";
     } else {
-        // reading from file
-        g_cap.open( argv[1] );
-        cout << "Reading from file: " << argv[1] << "\n";
-        video_flag = 1;
+        // Wrong number of arguments
+        cout << "Received the wrong number of arguments: " << argc << "\n";
+        cout << "Exiting ... \n";
     }
 
     // check that the file is open
-    if( !g_cap.isOpened() ) {
+    if( !cap.isOpened() ) {
         cerr << "Error!  Could not open the file.  Exiting ...\n";
         return -1;
     }
 
-    cv::Size size( (int) g_cap.get(cv::CAP_PROP_FRAME_WIDTH), (int) g_cap.get(cv::CAP_PROP_FRAME_HEIGHT) );
+    cv::Size size( (int) cap.get(cv::CAP_PROP_FRAME_WIDTH), (int) cap.get(cv::CAP_PROP_FRAME_HEIGHT) );
     cout << "Video dimensions are: " << size << "\n";
 
     // Create a window for when we read from a camera asd well as for the processed frame
@@ -79,31 +75,28 @@ int main( int argc, char** argv ){
     string trackbar_name = "Pyramid Downsampling Reduction Factor";
     cv::createTrackbar( trackbar_name, rec_window, &g_slider_position, g_slider_max_pos );
 
-    cv::Mat g_bgr_frame;
+    cv::Mat bgr_frame;
 
     // Loop over the input
     for(;;) {
-        g_cap >> g_bgr_frame;
+        cap >> bgr_frame;
         int current_pos = cv::getTrackbarPos( trackbar_name, rec_window );
-        if( g_bgr_frame.empty() ) break; // end of input
-        if( !video_flag ) {
-            cv::imshow( rec_window, g_bgr_frame );
-        }
+        if( bgr_frame.empty() ) break; // end of input
+
+        cv::imshow( rec_window, bgr_frame );
 
         // only allow values greater than 0 for downsampling factor
         if ( current_pos != 0 ) {
-            cv::imshow( proc_window, pydDownsample( g_bgr_frame, current_pos ) );
+            cv::imshow( proc_window, pydDownsample( bgr_frame, current_pos ) );
         } else {
             cv::setTrackbarPos( trackbar_name, rec_window, 1 ); // reset the slider to 1
         }
 
-        if( !video_flag ) {
-            char c = (char) cv::waitKey(10); // we are reading from the camera and need to tell it we are done capturing
-            if( c == 27 ) break;
-        }
+        char c = (char) cv::waitKey(10); // we are reading from the camera and need to tell it we are done capturing
+        if( c == 27 ) break;
     }
 
-    g_cap.release();
+    cap.release();
     return 0;
 
 }
