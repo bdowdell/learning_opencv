@@ -24,14 +24,14 @@ const int g_slider_max_pos = 4;
 // END GLOBAL VARIABLES
 
 // recursivePyrDown() recursively downsamples a frame where scale is the number of recursive passes of pyrDown()
-cv::Mat recursivePyrDown( cv::Mat inframe, int scale ) {
+cv::Mat RecursivePyrDown(cv::Mat inframe, int scale) {
     if ( scale == 1 ) {
         cv::Mat outframe;
         cv::pyrDown( inframe, outframe );
         return outframe;
     } else {
         cv::Mat proc;
-        cv::pyrDown( recursivePyrDown( inframe, --scale ), proc );
+        cv::pyrDown( RecursivePyrDown( inframe, --scale ), proc );
         return proc;
     }
 }
@@ -99,7 +99,7 @@ int main( int argc, char** argv ){
 
         // only allow values greater than 0 for downsampling factor
         if ( current_pos != 0 ) {
-            cv::imshow( proc_window, recursivePyrDown( bgr_frame, current_pos ) );
+            cv::imshow( proc_window, RecursivePyrDown( bgr_frame, current_pos ) );
         } else {
             //cv::setTrackbarPos( trackbar_name, rec_window, 1 ); // reset the slider to 1
             cv::imshow( proc_window, bgr_frame ); // show the full-resolution frame
