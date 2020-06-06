@@ -13,11 +13,11 @@ LIBS = $(OPENCV)
 all : $(addprefix $(BIN_DIR)/,$(BINS)) $(addprefix $(OBJ_DIR)/,$(OBJS))
 
 bin/% : obj/%.o
-	$(CXX) $(CXXFLAGS) $(LIBS) $? -o $@ -lstdc++
+	$(CXX) $(CXXFLAGS) $(LIBS) -lm $? -o $@ -lstdc++
 	chmod +x $@ 
 
 obj/%.o : src/%.cpp
-	$(CXX) $(CXXFLAGS) $(LIBS) -c $? -o $@ -lstdc++
+	$(CXX) $(CXXFLAGS) $(LIBS) -lm -c $? -o $@ -lstdc++
 
 .PHONY: clean
 clean :

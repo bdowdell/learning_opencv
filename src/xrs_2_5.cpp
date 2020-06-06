@@ -13,6 +13,7 @@ automatically resets to 1 as 0 is not a valid option.
 #include <opencv2/opencv.hpp>
 #include <iostream>
 #include <string>
+#include <cmath>
 
 using namespace std;
 
@@ -20,26 +21,27 @@ using namespace std;
 
 int g_slider_position = 1;
 const int g_slider_max_pos = 4;
-cv::Mat g_outframe;
-cv::Mat g_processed_frame;
 
 // END GLOBAL VARIABLES
 
 // recursivePyrDown() recursively downsamples a frame where scale is the number of recursive passes of pyrDown()
 cv::Mat recursivePyrDown(cv::Mat inframe, int scale) {
     if ( scale == 1 ) {
-        cv::pyrDown( inframe, g_outframe );
-        return g_outframe;
+        cv::Mat outframe;
+        cv::pyrDown( inframe, outframe );
+        return outframe;
     } else {
-        cv::pyrDown( recursivePyrDown( inframe, --scale ), g_processed_frame );
-        return g_processed_frame;
+        cv::Mat processed_frame;
+        cv::pyrDown( recursivePyrDown( inframe, --scale ), processed_frame );
+        return processed_frame;
     }
 }
 
 // callback function for trackbar position change
 void onTrackbarSlide(int pos, void *){
     if ( pos != 0 ) {
-        cout << "Applying " << 2*pos << "x pyramid downsampling.\n";
+        int scale = pow(2, pos);
+        cout << "Applying " << scale << "x pyramid downsampling.\n";
     } else {
         cout << "Not applying any pyramid downsampling.\n";
     }
