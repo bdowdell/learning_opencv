@@ -79,7 +79,7 @@ int main( int argc, char** argv ){
     string trackbar_name = "Pyramid Downsampling Reduction Factor";
     cv::createTrackbar( trackbar_name, rec_window, &g_slider_position, g_slider_max_pos );
 
-    cv::Mat g_bgr_frame, g_pyr_frame;
+    cv::Mat g_bgr_frame;
 
     // Loop over the input
     for(;;) {
