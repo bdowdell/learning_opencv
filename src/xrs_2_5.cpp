@@ -36,9 +36,12 @@ cv::Mat pydDownsample( cv::Mat inframe, int scale ) {
     }
 }
 
+// callback function for trackbar position change
 void onTrackbarSlide( int pos, void * ){
     if ( pos != 0 ) {
         cout << "Applying " << 2*pos << "x pyramid downsampling.\n";
+    } else {
+        cout << "Not applying any pyramid downsampling.\n";
     }
 }
 
@@ -98,7 +101,8 @@ int main( int argc, char** argv ){
         if ( current_pos != 0 ) {
             cv::imshow( proc_window, pydDownsample( bgr_frame, current_pos ) );
         } else {
-            cv::setTrackbarPos( trackbar_name, rec_window, 1 ); // reset the slider to 1
+            //cv::setTrackbarPos( trackbar_name, rec_window, 1 ); // reset the slider to 1
+            cv::imshow( proc_window, bgr_frame ); // show the full-resolution frame
         }
 
         char c = (char) cv::waitKey(10); // we are reading from the camera and need to tell it we are done capturing
