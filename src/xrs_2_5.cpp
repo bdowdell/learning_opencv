@@ -61,7 +61,7 @@ int main( int argc, char** argv ){
     if( argc == 1 ) {
         // reading from camera, only two args
         cap.open(0, cv::CAP_V4L);
-        cout << "Reading from camera.  Reading until <esc> key is pressed ...\n";
+        cout << "\nReading from camera.  Reading until <esc> key is pressed ...\n";
     } else {
         // Wrong number of arguments
         cout << "Received the wrong number of arguments: " << argc << "\n";
@@ -88,9 +88,6 @@ int main( int argc, char** argv ){
     cv::namedWindow( proc_window, cv::WINDOW_AUTOSIZE );
     cv::moveWindow( proc_window, (window_x + delta_x) + 10, window_y );
 
-    // Declare a Mat to hold the current pyrDown() frame from the camera stream
-    cv::Mat pyr_frame;
-
     // Create trackbar for selecting pyramid downsample factor
     string trackbar_name = "Pyramid Downsampling Reduction Factor";
     cv::createTrackbar( trackbar_name, rec_window, &g_slider_position, g_slider_max_pos, onTrackbarSlide );
@@ -107,8 +104,7 @@ int main( int argc, char** argv ){
 
         // only allow values greater than 0 for downsampling factor
         if ( current_pos != 0 ) {
-            pyr_frame = recursivePyrDown( g_bgr_frame, current_pos );
-            cv::imshow( proc_window, pyr_frame );
+            cv::imshow( proc_window, recursivePyrDown( g_bgr_frame, current_pos ) );
         } else {
             //cv::setTrackbarPos( trackbar_name, rec_window, 1 ); // reset the slider to 1
             cv::imshow( proc_window, g_bgr_frame ); // show the full-resolution frame
