@@ -4,7 +4,7 @@ to interactively apply pyramid downscaling using a trackbar.
 
 The initial position is 1 which represents the default 2x downsample.
 
-The maximum position is 4 which represents 8x downsample.
+The maximum position is 4 which represents 16x downsample.
 
 The user can slide back and forth.  If the user selects 0, the trackbar
 automatically resets to 1 as 0 is not a valid option.
@@ -19,8 +19,10 @@ using namespace std;
 
 // GLOBAL VARIABLES
 
-int g_slider_position = 1;
+int g_slider_position = 0;
 const int g_slider_max_pos = 4;
+cv::Mat g_bgr_frame;
+cv::Size g_pyr_size;
 
 // END GLOBAL VARIABLES
 
@@ -39,11 +41,15 @@ cv::Mat recursivePyrDown(cv::Mat inframe, int scale) {
 
 // callback function for trackbar position change
 void onTrackbarSlide(int pos, void *){
+    g_pyr_size.width = g_bgr_frame.size().width / pow(2, pos);
+    g_pyr_size.height = g_bgr_frame.size().height / pow(2, pos);
     if ( pos != 0 ) {
         int scale = pow(2, pos);
         cout << "Applying " << scale << "x pyramid downsampling.\n";
+        cout << "\tNew dimensions: " << g_pyr_size << "\n\n";
     } else {
         cout << "Not applying any pyramid downsampling.\n";
+        cout << "\tBack to original dimensions: " << g_pyr_size << "\n\n";
     }
 }
 
@@ -69,7 +75,7 @@ int main( int argc, char** argv ){
     }
 
     cv::Size size( (int) cap.get(cv::CAP_PROP_FRAME_WIDTH), (int) cap.get(cv::CAP_PROP_FRAME_HEIGHT) );
-    cout << "Video dimensions are: " << size << "\n";
+    cout << "\tVideo dimensions are: " << size << "\n\n";
 
     // Create a window for when we read from a camera as well as for the processed frame
     string rec_window = "Input Recording";
@@ -82,29 +88,30 @@ int main( int argc, char** argv ){
     cv::namedWindow( proc_window, cv::WINDOW_AUTOSIZE );
     cv::moveWindow( proc_window, (window_x + delta_x) + 10, window_y );
 
+    // Declare a Mat to hold the current pyrDown() frame from the camera stream
+    cv::Mat pyr_frame;
+
     // Create trackbar for selecting pyramid downsample factor
     string trackbar_name = "Pyramid Downsampling Reduction Factor";
     cv::createTrackbar( trackbar_name, rec_window, &g_slider_position, g_slider_max_pos, onTrackbarSlide );
 
-    // Declare a Mat to hold the current frame from the camera stream
-    cv::Mat bgr_frame;
-
-    cout << "Initially applying " << 2*g_slider_position << "x pyramid downsampling.\n";
+    cout << "Initially applying no pyramid downsampling.\n\n";
 
     // Loop over the input
     for(;;) {
-        cap >> bgr_frame;
+        cap >> g_bgr_frame;
         int current_pos = cv::getTrackbarPos( trackbar_name, rec_window );
-        if( bgr_frame.empty() ) break; // end of input
+        if( g_bgr_frame.empty() ) break; // end of input
 
-        cv::imshow( rec_window, bgr_frame );
+        cv::imshow( rec_window, g_bgr_frame );
 
         // only allow values greater than 0 for downsampling factor
         if ( current_pos != 0 ) {
-            cv::imshow( proc_window, recursivePyrDown( bgr_frame, current_pos ) );
+            pyr_frame = recursivePyrDown( g_bgr_frame, current_pos );
+            cv::imshow( proc_window, pyr_frame );
         } else {
             //cv::setTrackbarPos( trackbar_name, rec_window, 1 ); // reset the slider to 1
-            cv::imshow( proc_window, bgr_frame ); // show the full-resolution frame
+            cv::imshow( proc_window, g_bgr_frame ); // show the full-resolution frame
         }
 
         char c = (char) cv::waitKey(10); // we are reading from the camera and need to tell it we are done capturing
