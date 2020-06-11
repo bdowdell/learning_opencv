@@ -40,8 +40,11 @@ int main(){
     string window_square = "Square";
     cv::namedWindow(window_square, cv::WINDOW_AUTOSIZE);
     cv::moveWindow(window_square, 500, 300);
-    cv::imshow(window_square, mat);
     cout << "Press <esc> key to exit ...\n";
-    cv::waitKey(0);
+    while(true){
+        cv::imshow(window_square, mat);
+        char c = (char) cv::waitKey(10);
+        if( c == 27 ) break;
+    }
     return 0;
 }
