@@ -17,6 +17,8 @@ int main(){
 
     cout << "Pointer address to row 20: " << &ptr_r20 << "\n";
     cout << "Pointer address to row 40: " << &ptr_r40 << "\n";
+    cout << "(20,5): " << &ptr_r20[5] << "\t(20,20): " << &ptr_r20[20] << "\n";
+    cout << "(40,5): " << &ptr_r40[5] << "\t(40,20): " << &ptr_r40[20] << "\n";
 
     for(int c=5; c<21; c++){
         ptr_r20[c] = cv::Vec3b(0, 255, 0); // set each column between 5->20 in row 20 to green
