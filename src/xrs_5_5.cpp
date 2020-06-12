@@ -23,7 +23,9 @@ int main( int argc, char** argv ){
     cv::Mat img = cv::imread(argv[1]);
     // check the dimensions of the image are at least 100x100
     if( img.size().width < 100 || img.size().height < 100){
-        cout << "Error has occured.  Require an image of at least 100x100.  Exiting ...\n";
+        cout << "Error has occured.  Require an image of at least 100x100.\n";
+        cout << "Input image has dimensions: " << img.size() << "\n";
+        cout << "Exiting now ... \n";
         return -1;
     }
     // create two ROI's and pass each to cv::bitwise_not()
