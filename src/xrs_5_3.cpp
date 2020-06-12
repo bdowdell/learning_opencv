@@ -15,6 +15,9 @@ int main(){
     cv::Vec3b* ptr_r20 = mat.ptr<cv::Vec3b>(20); // pointer to row 20 (top)
     cv::Vec3b* ptr_r40 = mat.ptr<cv::Vec3b>(40); // pointer to row 40 (bottom)
 
+    cout << "Pointer address to row 20: " << &ptr_r20 << "\n";
+    cout << "Pointer address to row 40: " << &ptr_r40 << "\n";
+
     for(int c=5; c<21; c++){
         ptr_r20[c] = cv::Vec3b(0, 255, 0); // set each column between 5->20 in row 20 to green
         ptr_r40[c] = cv::Vec3b(0, 255, 0); // set each column between 5->20 in row 40 to green
