@@ -14,11 +14,15 @@ and so on until the final innermost square is set to value 200;
 using namespace std;
 
 int main(){
-    cv::Mat mat = cv::Mat::zeros(210, 210, CV_8UC1); // create a 210x210 single channel byte image of zeros
+    // create a 210x210 single channel byte image of zeros
+    cv::Mat mat = cv::Mat::zeros(210, 210, CV_8UC1);
+
+    // create window to hold the image
     string win_name = "ROI Pyramid";
     cv::namedWindow(win_name, cv::WINDOW_AUTOSIZE);
     cv::moveWindow(win_name, 700, 300);
-    cout << "Press <esc> key to exit ... \n";
+    
+    cout << "Press <esc> key to exit ... \n"; // continue to show the image until esc key entered
     while(true){
         cv::imshow(win_name, mat);
         char c = (char) cv::waitKey(10);
