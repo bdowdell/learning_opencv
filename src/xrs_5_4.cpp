@@ -27,11 +27,11 @@ int main(){
     int amplitude = 20;
     int width = (int) mat.size().width;
     int height = (int) mat.size().height;
-    int num_roi = width/(2*border);
+    int num_roi = width/(2*border)+1;
 
-    cv::Mat mat_roi = cv::Mat(mat);
+    cv::Mat mat_roi = cv::Mat(mat); // instantiate mat_roi to mat for later subselection
 
-    for(int i=1; i<num_roi+1; i++){
+    for(int i=1; i<num_roi; i++){
         mat_roi = cv::Mat(mat_roi, cv::Rect(10, 10, width-2*border*i, height-2*border*i));
         mat_roi.setTo(amplitude*i);
     }
