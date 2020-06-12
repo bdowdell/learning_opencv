@@ -17,6 +17,25 @@ int main(){
     // create a 210x210 single channel byte image of zeros
     cv::Mat mat = cv::Mat::zeros(210, 210, CV_8UC1);
 
+    /*cv::Mat mat_roi = cv::Mat(mat, cv::Rect(10, 10, 190, 190));
+    mat_roi.setTo(20);
+
+    mat_roi = cv::Mat(mat_roi, cv::Rect(10, 10, 170, 170));
+    mat_roi.setTo(40);*/
+
+    int border = 10;
+    int amplitude = 20;
+    int width = (int) mat.size().width;
+    int height = (int) mat.size().height;
+    int num_roi = width/(2*border);
+
+    cv::Mat mat_roi = cv::Mat(mat);
+
+    for(int i=1; i<num_roi+1; i++){
+        mat_roi = cv::Mat(mat_roi, cv::Rect(10, 10, width-2*border*i, height-2*border*i));
+        mat_roi.setTo(amplitude*i);
+    }
+
     // create window to hold the image
     string win_name = "ROI Pyramid";
     cv::namedWindow(win_name, cv::WINDOW_AUTOSIZE);
