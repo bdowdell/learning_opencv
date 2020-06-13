@@ -61,9 +61,10 @@ int main( int argc, char** argv ){
     // read in an image and split it into three channels (bgr)
     cv::Mat img = cv::imread(argv[1]);
 
-    // if img size is bigger than 800x800, use pyrDown to resize
-    if( img.size().width > 600 && img.size().height > 600) {
-        int num_passes = sqrt( img.size().width / 600 );
+    // if img width is bigger than 512 use pyrDown to resize
+    if( img.size().width > 512 ) {
+        cout << "Input image size: " << img.size() << "\n";
+        int num_passes = sqrt( img.size().width / 512 ) + 1;
         img = recursivePyrDown(img, num_passes);
         cout << "Rescaled image with " << num_passes << " passes of pyramid down\n";
     }
