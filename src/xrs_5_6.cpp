@@ -10,9 +10,11 @@ Create a mask using cv::compare().  Load a real image.  Use cv::split() to split
 #include <opencv2/opencv.hpp>
 #include <iostream>
 #include <string>
+#include <cmath>
 
 using namespace std;
 
+// look-up function to return string format of integer channel depth
 string lookupDepth(int depth){
     switch(depth){
         case 0:
@@ -34,6 +36,19 @@ string lookupDepth(int depth){
     }
 }
 
+// recursivePyrDown() recursively downsamples a frame where scale is the number of recursive passes of pyrDown()
+cv::Mat recursivePyrDown(cv::Mat inframe, int scale) {
+    if ( scale == 1 ) {
+        cv::Mat outframe;
+        cv::pyrDown( inframe, outframe );
+        return outframe;
+    } else {
+        cv::Mat processed_frame;
+        cv::pyrDown( recursivePyrDown( inframe, --scale ), processed_frame );
+        return processed_frame;
+    }
+}
+
 int main( int argc, char** argv ){
     // check the correct number of args are passed.  expect two.
     if( argc != 2 ){
@@ -45,6 +60,14 @@ int main( int argc, char** argv ){
 
     // read in an image and split it into three channels (bgr)
     cv::Mat img = cv::imread(argv[1]);
+
+    // if img size is bigger than 800x800, use pyrDown to resize
+    if( img.size().width > 600 && img.size().height > 600) {
+        int num_passes = sqrt( img.size().width / 600 );
+        img = recursivePyrDown(img, num_passes);
+        cout << "Rescaled image with " << num_passes << " passes of pyramid down\n";
+    }
+
     cout << "IMG:\n"
          << "\tdepth: " << lookupDepth(img.depth()) << "\n"
          << "\tchannels: " << img.channels() << "\n"
