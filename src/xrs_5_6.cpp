@@ -1,0 +1,73 @@
+/*
+Create a mask using cv::compare().  Load a real image.  Use cv::split() to split the image into red, green, and blue images.
+1. Find and display the green image.
+2. Clone this green plane image twice (call these clone1 and clone2).
+3. Find the green plane's minimum and maximum value.
+4. Set clone1's values to thresh = (unsigned char) ((maximum - minimum)/2.0)
+5. Set clone2 to 0 and use cv::compare(green_image, clone1, clone2, cv::CMP_GE).  Now clone2 will have a mask of where the values exceeds thresh in the green image.
+6. Finally, use cv::subtract(green_image, thresh/2, green_image, clone2) and display the image.
+*/
+#include <opencv2/opencv.hpp>
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+int main( int argc, char** argv ){
+    // check the correct number of args are passed.  expect two.
+    if( argc != 2 ){
+        cout << "Error.  Expected two command line arguments, but received: " << argc << "\n";
+        cout << "Usage: " << argv[0] << " <filename>\n";
+        cout << "Exiting ...\n";
+        return -1;
+    }
+
+    // read in an image and split it into three channels (bgr)
+    cv::Mat img = cv::imread(argv[1]);
+    cv::Mat channels[3];
+    cv::split(img, channels);
+
+    // create windows to hold the input image and the green channel of the split image
+    string in_window = "Input";
+    string green_window = "Green channel";
+    string green_thresh_window = "Green Threshold Mask";
+    cv::namedWindow(in_window, cv::WINDOW_AUTOSIZE);
+    cv::moveWindow(in_window, 500, 300);
+    cv::namedWindow(green_window, cv::WINDOW_AUTOSIZE);
+    cv::moveWindow(green_window, 500+img.size().width, 300);
+    cv::namedWindow(green_thresh_window, cv::WINDOW_AUTOSIZE);
+    cv::moveWindow(green_thresh_window, 500+2*img.size().width,300);
+
+    // display the input image and the green channel
+    cout << "press any key to exit ...\n";
+    cv::imshow(in_window, img);
+    cv::imshow(green_window, channels[1]);
+
+    // make two clones of the green channel for further manipulation
+    cv::Mat clone1 = channels[1].clone();
+    cv::Mat clone2 = channels[1].clone();
+
+    // get minimum and maximum values for green channel
+    double min, max;
+    cv::Point minLoc, maxLoc; // we don't really need to get the (X,Y)'s but we will do it for practice
+    cv::minMaxLoc(channels[1], &min, &max, &minLoc, &maxLoc);
+    cout << "Green channel minimum value: " << min << " @ " << minLoc << "\n";
+    cout << "Green channel maximum value: " << max << " @ " << maxLoc << "\n";
+
+    // set clone1's threshold
+    int thresh = (unsigned char) ((max - min) / 2.0);
+    cout << "Threshold value = " << thresh << "\n";
+    clone1.setTo(thresh);
+
+    // convert clone2 to a mask for where green channel amps are above thresh
+    clone2.setTo(0);
+    cv::compare(channels[1], clone1, clone2, cv::CMP_GE); // cv::CMP_GE src1 >= src2
+
+    // apply the threshold mask to the green channel
+    cv::subtract(channels[1], thresh/2, channels[1], clone2);
+    cv::imshow(green_thresh_window, channels[1]);
+
+    cv::waitKey(0);
+
+    return 0;
+}
