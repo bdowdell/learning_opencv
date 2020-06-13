@@ -13,6 +13,27 @@ Create a mask using cv::compare().  Load a real image.  Use cv::split() to split
 
 using namespace std;
 
+string lookupDepth(int depth){
+    switch(depth){
+        case 0:
+            return "CV_8U";
+        case 1:
+            return "CV_8S";
+        case 2:
+            return "CV_16U";
+        case 3:
+            return "CV_16S";
+        case 4:
+            return "CV_32S";
+        case 5:
+            return "CV_32F";
+        case 6:
+            return "CV_64F";
+        default:
+            return "";
+    }
+}
+
 int main( int argc, char** argv ){
     // check the correct number of args are passed.  expect two.
     if( argc != 2 ){
@@ -24,6 +45,10 @@ int main( int argc, char** argv ){
 
     // read in an image and split it into three channels (bgr)
     cv::Mat img = cv::imread(argv[1]);
+    cout << "IMG:\n"
+         << "\tdepth: " << lookupDepth(img.depth()) << "\n"
+         << "\tchannels: " << img.channels() << "\n"
+         << "\tsize: " << img.size() << "\n"; 
     cv::Mat channels[3];
     cv::split(img, channels);
 
@@ -32,20 +57,27 @@ int main( int argc, char** argv ){
     string green_window = "Green channel";
     string green_thresh_window = "Green Threshold Mask";
     cv::namedWindow(in_window, cv::WINDOW_AUTOSIZE);
-    cv::moveWindow(in_window, 500, 300);
+    cv::moveWindow(in_window, 500, 150);
     cv::namedWindow(green_window, cv::WINDOW_AUTOSIZE);
-    cv::moveWindow(green_window, 500+img.size().width, 300);
+    cv::moveWindow(green_window, 500+img.size().width, 150);
     cv::namedWindow(green_thresh_window, cv::WINDOW_AUTOSIZE);
-    cv::moveWindow(green_thresh_window, 500+2*img.size().width,300);
+    cv::moveWindow(green_thresh_window, 500+2*img.size().width,150);
 
     // display the input image and the green channel
-    cout << "press any key to exit ...\n";
     cv::imshow(in_window, img);
     cv::imshow(green_window, channels[1]);
 
     // make two clones of the green channel for further manipulation
     cv::Mat clone1 = channels[1].clone();
+    cout << "clone1:\n"
+         << "\tdepth: " << lookupDepth(clone1.depth()) << "\n"
+         << "\tchannels: " << clone1.channels() << "\n"
+         << "\tsize: " << clone1.size() << "\n"; 
     cv::Mat clone2 = channels[1].clone();
+    cout << "clone2:\n"
+         << "\tdepth: " << lookupDepth(clone2.depth()) << "\n"
+         << "\tchannels: " << clone2.channels() << "\n"
+         << "\tsize: " << clone2.size() << "\n";
 
     // get minimum and maximum values for green channel
     double min, max;
@@ -67,6 +99,7 @@ int main( int argc, char** argv ){
     cv::subtract(channels[1], thresh/2, channels[1], clone2);
     cv::imshow(green_thresh_window, channels[1]);
 
+    cout << "press any key to exit ...\n";
     cv::waitKey(0);
 
     return 0;
