@@ -17,22 +17,14 @@ using namespace std;
 // look-up function to return string format of integer channel depth
 string lookupDepth(int depth){
     switch(depth){
-        case 0:
-            return "CV_8U";
-        case 1:
-            return "CV_8S";
-        case 2:
-            return "CV_16U";
-        case 3:
-            return "CV_16S";
-        case 4:
-            return "CV_32S";
-        case 5:
-            return "CV_32F";
-        case 6:
-            return "CV_64F";
-        default:
-            return "";
+        case 0: return "CV_8U";
+        case 1: return "CV_8S";
+        case 2: return "CV_16U";
+        case 3: return "CV_16S";
+        case 4: return "CV_32S";
+        case 5: return "CV_32F";
+        case 6: return "CV_64F";
+        default: return "";
     }
 }
 
