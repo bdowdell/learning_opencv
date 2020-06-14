@@ -15,7 +15,7 @@ Create a mask using cv::compare().  Load a real image.  Use cv::split() to split
 using namespace std;
 
 // look-up function to return string format of integer channel depth
-string lookupDepth(int depth){
+string getChannelDepth(int depth){
     switch(depth){
         case 0: return "CV_8U";
         case 1: return "CV_8S";
@@ -62,7 +62,7 @@ int main( int argc, char** argv ){
     }
 
     cout << "IMG:\n"
-         << "\tdepth: " << lookupDepth(img.depth()) << "\n"
+         << "\tdepth: " << getChannelDepth(img.depth()) << "\n"
          << "\tchannels: " << img.channels() << "\n"
          << "\tsize: " << img.size() << "\n"; 
     cv::Mat channels[3];
@@ -86,12 +86,12 @@ int main( int argc, char** argv ){
     // make two clones of the green channel for further manipulation
     cv::Mat clone1 = channels[1].clone();
     cout << "clone1:\n"
-         << "\tdepth: " << lookupDepth(clone1.depth()) << "\n"
+         << "\tdepth: " << getChannelDepth(clone1.depth()) << "\n"
          << "\tchannels: " << clone1.channels() << "\n"
          << "\tsize: " << clone1.size() << "\n"; 
     cv::Mat clone2 = channels[1].clone();
     cout << "clone2:\n"
-         << "\tdepth: " << lookupDepth(clone2.depth()) << "\n"
+         << "\tdepth: " << getChannelDepth(clone2.depth()) << "\n"
          << "\tchannels: " << clone2.channels() << "\n"
          << "\tsize: " << clone2.size() << "\n";
 
