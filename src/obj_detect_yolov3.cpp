@@ -31,7 +31,7 @@ vector<string> g_classes; // Classes from coco.names
 
 // FUNCTION PROTOTYPES
 // Remove the bounding boxes with low confidence using NMS
-void postprocess(cv::Mat& frame, const vector<cv::Mat>& out);
+void postprocess(cv::Mat& frame, const vector<cv::Mat>& outs);
 
 // Draw the predicted bounding box
 void drawPred(int classId, float conf, int left, int top, int right, int bottom, cv::Mat& frame);
@@ -108,7 +108,14 @@ int main( int argc, char** argv ){
     net.setPreferableBackend(cv::dnn::DNN_BACKEND_OPENCV);
     net.setPreferableTarget(cv::dnn::DNN_TARGET_CPU);
 
+    // Initialize the video writer if the input format is not an image
+    if(!parser.has("image")){
+        writer.open(outputFile, cv::VideoWriter::fourcc('M','J','P','G'), 28, 
+        cv::Size(cap.get(cv::CAP_PROP_FRAME_WIDTH), cap.get(cv::CAP_PROP_FRAME_HEIGHT)));
+    }
+
     if( camera_mode == 1) cout << "To exit, press <esc> key.\n";
+    // process frames
     for(;;) {
         // get the current frame
         cap >> frame;
@@ -120,9 +127,102 @@ int main( int argc, char** argv ){
             cv::waitKey(0);
             break;
         }
+        
+        // Create a 4D blob from the frame
+        cv::dnn::blobFromImage(frame, blob, 1/255.0, cv::Size(g_inpWidth, g_inpHeight), 
+                               cv::Scalar(0,0,0), true, false);
+        
+        // Pass the current frame to the network
+        net.setInput(blob);
+
+        // Runs the forward pass to get output of the output layers
+        vector<cv::Mat> outs;
+        net.forward(outs, getOutputNames(net));
+
+        // Remove the bounding boxes with low confidence
+        postprocess(frame, outs);
+
+        // Include efficiency information
+        vector<double> layersTimes;
+        double freq = cv::getTickFrequency() / 1000;
+        double t = net.getPerfProfile(layersTimes) / freq;
+        string label = cv::format("Inference time for a frame: %.2f ms", t);
+        cv::putText(frame, label, cv::Point(0, 15), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(0, 0, 255));
+
+        // Write the frame with the detection boxes
+        cv::Mat detected_frame;
+        frame.convertTo(detected_frame, CV_8U);
+        if ( parser.has("image") ) cv::imwrite(outputFile, detected_frame);
+        else writer.write(detected_frame);
+
         cv::imshow(win_in, frame);
         char c = (char) cv::waitKey(10);
         if( c == 27 ) break;
     }
+
+    // clean up
+    cap.release();
+    if(!parser.has("image")) writer.release();
+
     return 0;
+}
+
+// Remove the bounding boxes with low confidence using NMS
+void postprocess(cv::Mat& frame, const vector<cv::Mat>& outs){
+    vector<int> class_ids;
+    vector<float> confidences;
+    vector<cv::Rect> boxes;
+
+    for(size_t i=0; i<outs.size(); ++i){
+        // Scan through all the bounding boxes output from the network and keep only the
+        // ones with high confidence scores.  Assign the box's class label as the class
+        // with the highest score for the box.
+        float* data = (float*) outs[i].data;
+        for (int j=0; j<outs[i].rows; ++j, data += outs[i].cols){
+            cv::Mat scores = outs[i].row(j).colRange(5, outs[i].cols);
+            cv::Point class_id_point;
+            double confidence;
+            // Get the value and location of the maximum score
+            cv::minMaxLoc(scores, 0, &confidence, 0, &class_id_point);
+            if ( confidence > g_confThreshold){
+                int center_x = (int) (data[0] * frame.cols);
+                int center_y = (int) (data[1] * frame.rows);
+                int width = (int) (data[2] * frame.cols);
+                int height = (int) (data[3] * frame.rows);
+                int left = center_x - width / 2;
+                int top = center_y = height / 2;
+                class_ids.push_back(class_id_point.x);
+                confidences.push_back((float)confidence);
+                boxes.push_back(cv::Rect(left, top, width, height));
+            }
+        }
+    }
+
+    // Pefrom non maximum suppression to eliminate redundant overlapping boxes with lower confidence
+    vector<int> indices;
+    cv::dnn::NMSBoxes(boxes, confidences, g_confThreshold, g_nmsThreshold, indices);
+    for( size_t i=0; i<indices.size(); ++i){
+        int idx = indices[i];
+        cv::Rect box = boxes[idx];
+        drawPred(class_ids[idx], confidences[idx], box.x, box.y, box.x+box.width, box.y+box.height, frame);
+    }
+
+}
+
+// Draw the predicted bounding box
+void drawPred(int classId, float conf, int left, int top, int right, int bottom, cv::Mat& frame){
+    // Draw a rectangle displaying the bounding box
+    cv::rectangle(frame, cv::Point(left, top), cv::Point(right, bottom), cv::Scalar(255, 178, 50), 3);
+
+    // Get the label for the class name and its confidence
+    string label = cv::format("%.2f", conf);
+    if(!g_classes.empty()){
+        cv::CV_Assert(classId < (int) g_classes.size());
+        label = g_classes[classId] + ":" + label;
+    }
+
+    // Display the label at the top of the bounding box
+    int baseline;
+    cv::Size label_size = cv::getTextSize(label, cv::FONT_HERSHEY_SIMPLEX, 0.5, 1, &baseline);
+    
 }
