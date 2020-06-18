@@ -101,6 +101,13 @@ int main( int argc, char** argv ){
     }
     cout << "Total number of class labels: " << num_classes << "\n";
 
+    // load YOLOv3 configuration and weights
+    string model_config = "/home/bendowdell/github/external_repositories/darknet/cfg/yolov3.cfg";
+    string model_wts = "/home/bendowdell/github/external_repositories/darknet/yolov3.weights";
+    cv::dnn::Net net = cv::dnn::readNetFromDarknet(model_config, model_wts);
+    net.setPreferableBackend(cv::dnn::DNN_BACKEND_OPENCV);
+    net.setPreferableTarget(cv::dnn::DNN_TARGET_CPU);
+
     if( camera_mode == 1) cout << "To exit, press <esc> key.\n";
     for(;;) {
         // get the current frame
