@@ -192,7 +192,7 @@ void postprocess(cv::Mat& frame, const vector<cv::Mat>& outs){
                 int width = (int) (data[2] * frame.cols);
                 int height = (int) (data[3] * frame.rows);
                 int left = center_x - width / 2;
-                int top = center_y = height / 2;
+                int top = center_y - height / 2;
                 class_ids.push_back(class_id_point.x);
                 confidences.push_back((float)confidence);
                 boxes.push_back(cv::Rect(left, top, width, height));
