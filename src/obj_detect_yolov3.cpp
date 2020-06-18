@@ -55,7 +55,7 @@ int main( int argc, char** argv ){
     cv::VideoCapture cap;
     cv::VideoWriter writer;
     cv::Mat frame, blob;
-    string win_in = "Input image";
+    string win_in = "Object Detection using OpenCV & YOLOv3";
     cv::namedWindow(win_in, cv::WINDOW_AUTOSIZE);
     cv::moveWindow(win_in, 500, 300);
 
@@ -68,7 +68,7 @@ int main( int argc, char** argv ){
             str = parser.get<cv::String>("image");
             cap.open(str);
             if(!cap.isOpened()) throw("error");
-            str.replace(str.end()-4, str.end(), "_yolo_out_cpp.avi");
+            str.replace(str.end()-4, str.end(), "_yolo_out_cpp.jpg");
             outputFile = str;
         } else if(parser.has("video")){
             // Open the video file
@@ -217,12 +217,34 @@ void drawPred(int classId, float conf, int left, int top, int right, int bottom,
     // Get the label for the class name and its confidence
     string label = cv::format("%.2f", conf);
     if(!g_classes.empty()){
-        cv::CV_Assert(classId < (int) g_classes.size());
+        CV_Assert(classId < (int) g_classes.size());
         label = g_classes[classId] + ":" + label;
     }
 
     // Display the label at the top of the bounding box
     int baseline;
     cv::Size label_size = cv::getTextSize(label, cv::FONT_HERSHEY_SIMPLEX, 0.5, 1, &baseline);
+    top = cv::max(top, label_size.height);
+    cv::rectangle(frame, cv::Point(left, top - round(1.5*label_size.height)), cv::Point(left+ round(1.5*label_size.width), top+baseline), cv::Scalar(255,255,255), cv::FILLED);
+    cv::putText(frame, label, cv::Point(left, top), cv::FONT_HERSHEY_SIMPLEX, 0.75, cv::Scalar(0,0,0), 1);
     
+}
+
+// Get the names of the output layers
+vector<string> getOutputNames(const cv::dnn::Net& net){
+    static vector<string> names;
+    if (names.empty()){
+        // Get the indices of the output layers, i.e. the layers with unconnected outputs
+        vector<int> out_layers = net.getUnconnectedOutLayers();
+
+        // get the names of all the layers in the network
+        vector<string> layers_names = net.getLayerNames();
+
+        // Get the names of the output layers in names
+        names.resize(out_layers.size());
+        for(size_t i=0; i<out_layers.size(); ++i){
+            names[i] = layers_names[out_layers[i] - 1];
+        }
+    }
+    return names;
 }
