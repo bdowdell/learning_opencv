@@ -1,5 +1,7 @@
 // experimenting with object detection using YOLOv3
 // based on https://github.com/spmallick/learnopencv/blob/master/ObjectDetection-YOLO/object_detection_yolo.cpp
+// This code is written at BigVision LLC. It is based on the OpenCV project. It is subject to the license terms in the LICENSE file found in this distribution and at http://opencv.org/license.html
+// modifications by Ben Dowdell
 // Usage examples:  ./obj_detect_yolov3 --video=run.mp4
 //                  ./obj_detect_yolov3 --image=bird.jpg
 // std headers
