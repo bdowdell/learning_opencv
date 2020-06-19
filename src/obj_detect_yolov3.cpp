@@ -22,6 +22,7 @@ const char* g_keys =
 "{help h | | Usage examples: \n\t\t./obj_detect_yolov3 --image=dog.jpg \n\t\t./obj_detect_yolov3 --video=run_sm.mp4}"
 "{image i        |<none>| input image   }"
 "{video v        |<none>| input video   }"
+"{iphone p       |<none>| device iphone }"
 ;
 
 float g_confThreshold = 0.5; // Confidence threshold
@@ -122,8 +123,10 @@ int main( int argc, char** argv ){
         // get the current frame
         cap >> frame;
 
-        cv::flip(frame, frame, 0); // flip video around x-axis for iPhone input
-        cv::flip(frame, frame, 1); // flip video around y-axis for iPhone input
+        if( parser.has("iphone")){
+            cv::flip(frame, frame, 0); // flip video around x-axis for iPhone input
+            cv::flip(frame, frame, 1); // flip video around y-axis for iPhone input
+        }
 
         // stop processing if end of stream
         if( frame.empty() ){
