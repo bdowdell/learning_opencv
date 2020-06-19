@@ -59,7 +59,7 @@ int main( int argc, char** argv ){
     cv::Mat frame, blob;
     string win_in = "Object Detection using OpenCV & YOLOv3";
     cv::namedWindow(win_in, cv::WINDOW_AUTOSIZE);
-    cv::moveWindow(win_in, 500, 300);
+    cv::moveWindow(win_in, 300, 300);
 
     int camera_mode = 0;
 
@@ -112,7 +112,7 @@ int main( int argc, char** argv ){
 
     // Initialize the video writer if the input format is not an image
     if(!parser.has("image")){
-        writer.open(outputFile, cv::VideoWriter::fourcc('M','J','P','G'), 28, 
+        writer.open(outputFile, cv::VideoWriter::fourcc('M','J','P','G'), cap.get(cv::CAP_PROP_FPS), 
         cv::Size(cap.get(cv::CAP_PROP_FRAME_WIDTH), cap.get(cv::CAP_PROP_FRAME_HEIGHT)));
     }
 
@@ -121,6 +121,10 @@ int main( int argc, char** argv ){
     for(;;) {
         // get the current frame
         cap >> frame;
+
+        cv::flip(frame, frame, 0); // flip video around x-axis for iPhone input
+        cv::flip(frame, frame, 1); // flip video around y-axis for iPhone input
+
         // stop processing if end of stream
         if( frame.empty() ){
             cout << "\nEnd of file\n";
@@ -214,7 +218,7 @@ void postprocess(cv::Mat& frame, const vector<cv::Mat>& outs){
 // Draw the predicted bounding box
 void drawPred(int classId, float conf, int left, int top, int right, int bottom, cv::Mat& frame){
     // Draw a rectangle displaying the bounding box
-    cv::rectangle(frame, cv::Point(left, top), cv::Point(right, bottom), cv::Scalar(255, 178, 50), 3);
+    cv::rectangle(frame, cv::Point(left, top), cv::Point(right, bottom), cv::Scalar(255, 178, 50), 2);
 
     // Get the label for the class name and its confidence
     string label = cv::format("%.2f", conf);
