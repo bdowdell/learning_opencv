@@ -118,6 +118,11 @@ int main( int argc, char** argv ){
     }
 
     if( camera_mode == 1) cout << "To exit, press <esc> key.\n";
+
+    // initialize variables to get average time to process a frame
+    double t_total = 0;
+    double t_ave = 0;
+    int frames = (int) cap.get(cv::CAP_PROP_FRAME_COUNT);
     // process frames
     for(;;) {
         // get the current frame
@@ -157,6 +162,7 @@ int main( int argc, char** argv ){
         double t = net.getPerfProfile(layersTimes) / freq;
         string label = cv::format("Inference time for a frame: %.2f ms", t);
         cv::putText(frame, label, cv::Point(0, 15), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(0, 0, 255));
+        t_total += t;
 
         // Write the frame with the detection boxes
         cv::Mat detected_frame;
@@ -172,6 +178,11 @@ int main( int argc, char** argv ){
     // clean up
     cap.release();
     if(!parser.has("image")) writer.release();
+
+    t_ave = t_total/frames;
+    string ave_time = cv::format("%.2f ms", t_ave);
+    cout << "Average time to process a frame: " << ave_time << endl;
+
 
     return 0;
 }
