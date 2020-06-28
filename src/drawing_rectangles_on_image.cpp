@@ -41,14 +41,18 @@ int main( int argc, char** argv ){
     cv::imshow(g_window_name, g_mat);
 
     // check for user escape
-    cout << "Press any key to exit.\n";
-    cv::waitKey(0);
+    cout << "Press <esc> key to exit.\n";
+    char c = 0;
+    while( c != 27 ){
+        c = (char) cv::waitKey(10);
+    }
+    //cv::waitKey(0);
 
     // Write out the edited file
     string out_name = argv[1];
     int pos = out_name.find_first_of(".");
     out_name = out_name.substr(0, pos);
-    out_name.append("_with_boxes.jpg");
+    out_name.append("_annotated.jpg");
     cv::imwrite(out_name, g_mat);
 
     return 0;
@@ -56,6 +60,7 @@ int main( int argc, char** argv ){
 
 void onMouse( int event, int x, int y, int flags, void* params ){
     cv::Mat im = g_mat.clone();
+    string label = "";
     switch (event) {
         case cv::EVENT_LBUTTONDOWN: // Left mouse button is clicked down
             g_clicked = true;
@@ -73,6 +78,8 @@ void onMouse( int event, int x, int y, int flags, void* params ){
             g_pt2.y = y;
             g_mat = im; // save boxes to g_mat
             cout << "LMB released at: " << g_pt2 << endl;
+            cout << "Label: \n";
+            cin >> label;
             break;
         case cv::EVENT_MOUSEMOVE: // moving mouse around after LMB down
             if( g_clicked ){
@@ -85,5 +92,6 @@ void onMouse( int event, int x, int y, int flags, void* params ){
     }
     // Create the rectangle from user input & display it to current window
     cv::rectangle(im, g_pt1, g_pt2, cv::Scalar(0,0,255), 1, 8, 0);
+    cv::putText(im, label, cv::Point(g_pt1.x, g_pt1.y-5), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(0,0,255), 1);
     cv::imshow(g_window_name, im);
 }
