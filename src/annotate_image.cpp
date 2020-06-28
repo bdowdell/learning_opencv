@@ -1,5 +1,5 @@
 /*
-Practice drawing boxes with the mouse
+User-selected bounding boxes and label annotations
 */
 #include <opencv2/highgui.hpp>
 #include <opencv2/imgproc.hpp>
