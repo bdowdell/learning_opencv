@@ -76,7 +76,7 @@ void onMouse( int event, int x, int y, int flags, void* params ){
             // set ending point at position of LMB release
             g_pt2.x = x;
             g_pt2.y = y;
-            g_mat = im; // save boxes to g_mat
+            g_mat = im; // update g_mat with current box selection
             cout << "LMB released at: " << g_pt2 << endl;
             cout << "Label: \n";
             cin >> label;
