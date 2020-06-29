@@ -30,6 +30,8 @@ I currently am running the code using CPU instead of GPU as my hardware is kind 
 
 ![Raw_Image](doc/ireland-soccer.jpg "Raw Image")
 
+Here are my manual annotations testing the code:
+
 ![Annotated_Image](doc/ireland-soccer_annotated.jpg "Annotated Image")
 
 And here is the same image when passed through obj_detect_yolov3.cpp:
