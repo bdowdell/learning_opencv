@@ -92,6 +92,20 @@ void onMouse( int event, int x, int y, int flags, void* params ){
     }
     // Create the rectangle from user input & display it to current window
     cv::rectangle(im, g_pt1, g_pt2, cv::Scalar(0,0,255), 1, 8, 0);
+    // force g_pt1 to be upper left corner and g_pt2 lower right
+    int tmp = 0;
+    if( !g_clicked ){
+        if( g_pt1.x > g_pt2.x ) {
+            tmp = g_pt1.x;
+            g_pt1.x = g_pt2.x;
+            g_pt2.x = tmp;
+        }
+        if( g_pt1.y > g_pt2.y) {
+            tmp = g_pt1.y;
+            g_pt1.y = g_pt2.y;
+            g_pt2.y = tmp;
+        }
+    }
     cv::putText(im, label, cv::Point(g_pt1.x, g_pt1.y-5), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(0,0,255), 1);
     cv::imshow(g_window_name, im);
 }
