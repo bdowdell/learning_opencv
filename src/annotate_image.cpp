@@ -13,7 +13,7 @@ cv::Point g_pt1 = cv::Point(0,0);
 cv::Point g_pt2 = cv::Point(0,0);
 cv::Mat g_mat = cv::Mat(500, 500, CV_8UC3, 0.0);
 bool g_clicked = false;
-string g_window_name = "Paint";
+string g_window_name = "Image Annotation Tool";
 
 // mouse callback function
 void onMouse( int event, int x, int y, int flags, void* params );
@@ -27,6 +27,10 @@ int main( int argc, char** argv ){
         cout << "Exiting ... \n";
         return -1;
     }
+
+    cout << "Click and drag on image to annotate a bounding box.\n";
+    cout << "Then, enter a label for the box at the command line.\n";
+    cout << "If label is multi-word, use '_' instead of spaces.\n";
 
     g_mat = cv::imread(argv[1]);
 
