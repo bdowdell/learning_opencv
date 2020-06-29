@@ -26,7 +26,7 @@ And the second image is after running it through the pretrained [YOLOv3](https:/
 
 I currently am running the code using CPU instead of GPU as my hardware is kind of old.  Using an Intel Core i5-2500K 3.3 GHz Quad-Core processor it takes on average 554 ms to process each frame using all four cores.
 
-[src/annotate_image.cpp](src/annotate_image.cpp) is an intial attempt at creating a tool for annotating images as future input to a custom-trained YOLOv3.  The user is able to read in an image, draw a bounding box, and input a label (via the command line prompt).  The annotated image is then output.  The following image source comes from [here](https://www.dochara.com/the-irish/sport-the-irish/soccer-in-ireland/attachment/ireland-soccer/).
+Eventually, I am going to want to train YOLOv3 on a custom set of data.  [src/annotate_image.cpp](src/annotate_image.cpp) is an intial attempt at creating a tool for annotating images.  The user is able to read in an image, draw a bounding box, and input a label (via the command line prompt).  The annotated image is then output.  The following image source comes from [here](https://www.dochara.com/the-irish/sport-the-irish/soccer-in-ireland/attachment/ireland-soccer/).
 
 ![Raw_Image](doc/ireland-soccer.jpg "Raw Image")
 
