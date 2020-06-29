@@ -23,3 +23,5 @@ Here is a still frame from a video I took of my wife juggling a soccer ball in o
 And the second image is after running it through the pretrained [YOLOv3](https://pjreddie.com/darknet/yolo/)
 
 ![Processed_Image](doc/kim_soccer_yolo_out_cpp_still.jpg "Processed Image")
+
+I currently am running the code using CPU instead of GPU as my hardware is kind of old.  Using an Intel Core i5-2500K 3.3 GHz Quad-Core processor it takes on average 554 ms to process each frame using all four cores.
