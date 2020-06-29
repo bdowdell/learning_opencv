@@ -65,7 +65,7 @@ int main( int argc, char** argv ) {
         }
 
         // get user input to adjust run mode or exit
-        char c = (char) waitKey(80);
+        char c = (char) waitKey(1);
         if( c == 's' ) {
             // single step mode
             g_run = 1;
@@ -75,6 +75,15 @@ int main( int argc, char** argv ) {
              // run mode
             g_run = -1; 
             cout << "Run mode, run = " << g_run << endl;
+        }
+        if( c == 'w' ) {
+            string outfile_name = argv[1];
+            int pos = outfile_name.find_first_of(".");
+            outfile_name = outfile_name.substr(0, pos);
+            outfile_name.append("_still.jpg");
+            cout << "Writing out current frame to: " << outfile_name << endl;
+            imwrite(outfile_name, frame);
+
         }
         if( c == 27 )
             break; // escape key hit
