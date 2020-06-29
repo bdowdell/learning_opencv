@@ -34,6 +34,6 @@ Here are my manual annotations testing the code:
 
 ![Annotated_Image](doc/ireland-soccer_annotated.jpg "Annotated Image")
 
-And here is the same image when passed through obj_detect_yolov3.cpp:
+And here is the same image when passed through pre-trained obj_detect_yolov3.cpp:
 
 ![Processed_Image](doc/ireland-soccer_yolo_out_cpp.jpg "YOLOv3 processed Image")
