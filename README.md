@@ -25,3 +25,9 @@ And the second image is after running it through the pretrained [YOLOv3](https:/
 ![Processed_Image](doc/kim_soccer_yolo_out_cpp_still.jpg "Processed Image")
 
 I currently am running the code using CPU instead of GPU as my hardware is kind of old.  Using an Intel Core i5-2500K 3.3 GHz Quad-Core processor it takes on average 554 ms to process each frame using all four cores.
+
+[src/annotate_image.cpp](src/annotate_image.cpp) is an intial attempt at creating a tool for annotating images as future input to a custom-trained YOLOv3.  The user is able to read in an image, draw a bounding box, and input a label (via the command line prompt).  The annotated image is then output.
+
+![Raw_Image](doc/ireland-soccer.jpg "Raw Image")
+
+![Annotated_Image](doc/ireland-soccer_annotated.jpg "Annotated Image")
