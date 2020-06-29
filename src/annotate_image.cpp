@@ -5,6 +5,7 @@ User-selected bounding boxes and label annotations
 #include <opencv2/imgproc.hpp>
 #include <iostream>
 #include <string>
+#include <vector>
 
 using namespace std;
 
@@ -14,6 +15,7 @@ cv::Point g_pt2 = cv::Point(0,0);
 cv::Mat g_mat = cv::Mat(500, 500, CV_8UC3, 0.0);
 bool g_clicked = false;
 string g_window_name = "Image Annotation Tool";
+vector<string> g_labels;
 
 // mouse callback function
 void onMouse( int event, int x, int y, int flags, void* params );
@@ -50,14 +52,21 @@ int main( int argc, char** argv ){
     while( c != 27 ){
         c = (char) cv::waitKey(10);
     }
-    //cv::waitKey(0);
 
     // Write out the edited file
     string out_name = argv[1];
     int pos = out_name.find_first_of(".");
     out_name = out_name.substr(0, pos);
     out_name.append("_annotated.jpg");
+    cout << "Annotating complete.  Writing out file to: " << out_name << endl;
     cv::imwrite(out_name, g_mat);
+
+
+    cout << "List of input labels: \n";
+    for(size_t i=0; i<g_labels.size(); ++i){
+        cout << g_labels[i] << ", ";
+    }
+    cout << "\n";
 
     return 0;
 }
@@ -84,6 +93,7 @@ void onMouse( int event, int x, int y, int flags, void* params ){
             cout << "LMB released at: " << g_pt2 << endl;
             cout << "Label: \n";
             cin >> label;
+            g_labels.push_back(label);
             break;
         case cv::EVENT_MOUSEMOVE: // moving mouse around after LMB down
             if( g_clicked ){
