@@ -20,7 +20,7 @@ Here is a still frame from a video I took of my wife juggling a soccer ball in o
 
 ![Raw_Image](doc/kim_soccer_converted_still.jpg "Raw Image")
 
-And the second image is after running it through the pretrained [YOLOv3](https://pjreddie.com/darknet/yolo/)
+And the second image is the same still frame after running the video through the pretrained [YOLOv3](https://pjreddie.com/darknet/yolo/)
 
 ![Processed_Image](doc/kim_soccer_yolo_out_cpp_still.jpg "Processed Image")
 
